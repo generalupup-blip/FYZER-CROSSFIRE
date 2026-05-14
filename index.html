@@ -27,7 +27,6 @@
     overflow-x: hidden;
   }
 
-  /* ===== ELECTRICITY CANVAS ===== */
   #lightning-canvas {
     position: fixed;
     top: 0; left: 0;
@@ -37,7 +36,6 @@
     opacity: 0.18;
   }
 
-  /* ===== HEADER ===== */
   header {
     position: relative;
     z-index: 10;
@@ -46,10 +44,7 @@
     background: linear-gradient(180deg, #000d1a 0%, transparent 100%);
   }
 
-  .logo-wrap {
-    display: inline-block;
-    position: relative;
-  }
+  .logo-wrap { display: inline-block; position: relative; }
 
   .logo-title {
     font-family: 'Orbitron', sans-serif;
@@ -60,7 +55,6 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: none;
     filter: drop-shadow(0 0 18px #00cfff);
     animation: pulse-logo 3s ease-in-out infinite;
   }
@@ -136,7 +130,6 @@
     box-shadow: var(--glow);
   }
 
-  /* ===== BANNER ===== */
   .banner {
     position: relative;
     z-index: 5;
@@ -169,7 +162,6 @@
     98% { opacity: 0.6; }
   }
 
-  /* ===== CATALOG SECTION ===== */
   #catalog-section {
     position: relative;
     z-index: 5;
@@ -200,7 +192,6 @@
     gap: 24px;
   }
 
-  /* ===== PRODUCT CARD ===== */
   .card {
     background: var(--card);
     border: 1px solid #00cfff22;
@@ -234,8 +225,6 @@
     height: 180px;
     object-fit: cover;
     display: block;
-    background: linear-gradient(135deg, #0a1f3a, #071428);
-    position: relative;
   }
 
   .card-img-placeholder {
@@ -278,9 +267,7 @@
     box-shadow: 0 0 10px #0077ff88;
   }
 
-  .card-body {
-    padding: 16px;
-  }
+  .card-body { padding: 16px; }
 
   .card-rank {
     font-family: 'Orbitron', sans-serif;
@@ -360,10 +347,7 @@
     gap: 6px;
   }
 
-  .btn-whatsapp:hover {
-    box-shadow: 0 0 20px #00c85388;
-    transform: scale(1.03);
-  }
+  .btn-whatsapp:hover { box-shadow: 0 0 20px #00c85388; transform: scale(1.03); }
 
   .btn-profile {
     background: transparent;
@@ -380,13 +364,8 @@
     align-items: center;
   }
 
-  .btn-profile:hover {
-    background: var(--blue2);
-    color: white;
-    box-shadow: var(--glow);
-  }
+  .btn-profile:hover { background: var(--blue2); color: white; box-shadow: var(--glow); }
 
-  /* ===== ADM PANEL ===== */
   #adm-section {
     display: none;
     position: relative;
@@ -414,9 +393,7 @@
     text-shadow: 0 0 15px var(--blue1);
   }
 
-  .form-group {
-    margin-bottom: 16px;
-  }
+  .form-group { margin-bottom: 16px; }
 
   .form-group label {
     display: block;
@@ -427,7 +404,7 @@
     margin-bottom: 6px;
   }
 
-  .form-group input, .form-group select, .form-group textarea {
+  .form-group input, .form-group select {
     width: 100%;
     background: #040f1f;
     border: 1px solid #00cfff33;
@@ -439,13 +416,12 @@
     transition: border-color 0.3s;
   }
 
-  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  .form-group input:focus, .form-group select:focus {
     border-color: var(--blue1);
     box-shadow: 0 0 10px #00cfff22;
   }
 
   .form-group select option { background: #040f1f; }
-
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
   .btn-adm {
@@ -463,21 +439,12 @@
     clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
   }
 
-  .btn-adm:hover {
-    box-shadow: var(--glow);
-    transform: scale(1.02);
-  }
+  .btn-adm:hover { box-shadow: var(--glow); transform: scale(1.02); }
 
-  .btn-danger {
-    background: linear-gradient(135deg, #cc0000, #880000);
-    margin-top: 4px;
-  }
-
+  .btn-danger { background: linear-gradient(135deg, #cc0000, #880000); margin-top: 4px; }
   .btn-danger:hover { box-shadow: 0 0 20px #cc000088; }
 
-  .adm-products-list {
-    margin-top: 30px;
-  }
+  .adm-products-list { margin-top: 30px; }
 
   .adm-product-item {
     background: #040f1f;
@@ -497,10 +464,7 @@
     color: var(--blue1);
   }
 
-  .adm-product-item .price-edit {
-    color: #00ff88;
-  }
-
+  .adm-product-item .price-edit { color: #00ff88; }
   .adm-btns { display: flex; gap: 6px; }
 
   .btn-sm {
@@ -517,7 +481,6 @@
   .btn-del { background: #cc0000; color: white; }
   .btn-sm:hover { opacity: 0.8; transform: scale(1.05); }
 
-  /* ===== LOGIN MODAL ===== */
   .modal-overlay {
     display: none;
     position: fixed;
@@ -541,6 +504,8 @@
     clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
     position: relative;
     animation: modal-in 0.3s ease;
+    overflow-y: auto;
+    max-height: 90vh;
   }
 
   @keyframes modal-in {
@@ -577,9 +542,7 @@
   }
 
   .alert-error { background: #cc000022; border: 1px solid #cc0000; color: #ff6666; }
-  .alert-success { background: #00cc5522; border: 1px solid #00cc55; color: #00ff88; }
 
-  /* ===== FOOTER ===== */
   footer {
     position: relative;
     z-index: 5;
@@ -593,7 +556,6 @@
     color: #3a6a8a;
   }
 
-  /* ===== TOAST ===== */
   .toast {
     position: fixed;
     bottom: 30px; right: 30px;
@@ -613,7 +575,6 @@
 
   .toast.show { transform: translateX(0); }
 
-  /* ===== EDIT MODAL ===== */
   .edit-modal {
     display: none;
     position: fixed;
@@ -627,7 +588,6 @@
 
   .edit-modal.show { display: flex; }
 
-  /* Scrollbar */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--dark); }
   ::-webkit-scrollbar-thumb { background: var(--blue2); border-radius: 3px; }
@@ -640,6 +600,47 @@
     border: 1px solid #00cfff33;
     display: none;
   }
+
+  .upload-btn-wrap {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .upload-btn-wrap input[type=file] {
+    position: absolute;
+    left: 0; top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+
+  .upload-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    background: #040f1f;
+    border: 1px dashed #00cfff55;
+    color: var(--blue1);
+    padding: 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .upload-label:hover {
+    border-color: var(--blue1);
+    background: #00cfff11;
+    box-shadow: 0 0 10px #00cfff22;
+  }
+
+  .upload-label.has-file { border-color: #00ff88; color: #00ff88; }
 
   .sold-badge {
     position: absolute;
@@ -664,7 +665,6 @@
 </head>
 <body>
 
-<!-- Lightning Canvas -->
 <canvas id="lightning-canvas"></canvas>
 
 <!-- LOGIN MODAL -->
@@ -717,8 +717,11 @@
       <input type="text" id="editLink" />
     </div>
     <div class="form-group">
-      <label>URL DA IMAGEM</label>
-      <input type="text" id="editImg" placeholder="https://..." oninput="previewEditImg(this.value)" />
+      <label>FOTO DO PRODUTO</label>
+      <div class="upload-btn-wrap">
+        <div class="upload-label" id="editUploadLabel">📷 ESCOLHER FOTO DO CELULAR / PC</div>
+        <input type="file" id="editImgFile" accept="image/*" onchange="handleEditImgUpload(this)" />
+      </div>
       <img id="editImgPreview" class="img-preview" />
     </div>
     <div class="form-group">
@@ -744,7 +747,7 @@
 <!-- NAV -->
 <nav>
   <button class="active" onclick="showSection('catalog')">🎮 CATÁLOGO</button>
-  <button onclick="showSection('adm')" id="admNavBtn">🔐 PAINEL ADM</button>
+  <button onclick="showSection('adm')">🔐 PAINEL ADM</button>
 </nav>
 
 <!-- BANNER -->
@@ -762,9 +765,7 @@
 <section id="adm-section">
   <div class="adm-panel">
     <div class="adm-title">⚡ PAINEL ADMINISTRATIVO ⚡</div>
-
     <div class="adm-title" style="font-size:0.85rem; margin-bottom:16px;">➕ ADICIONAR NOVO PRODUTO</div>
-
     <div class="form-group">
       <label>NOME / RANK</label>
       <input type="text" id="newName" placeholder="Ex: GENERAL COM 5 VIPs" />
@@ -800,17 +801,18 @@
       <input type="text" id="newLink" placeholder="https://br.crossfire.z8games.com/profile/..." />
     </div>
     <div class="form-group">
-      <label>URL DA IMAGEM DO PRODUTO</label>
-      <input type="text" id="newImg" placeholder="https://..." oninput="previewImg(this.value)" />
+      <label>FOTO DO PRODUTO</label>
+      <div class="upload-btn-wrap">
+        <div class="upload-label" id="newUploadLabel">📷 ESCOLHER FOTO DO CELULAR / PC</div>
+        <input type="file" id="newImgFile" accept="image/*" onchange="handleNewImgUpload(this)" />
+      </div>
       <img id="imgPreview" class="img-preview" />
     </div>
     <button class="btn-adm" onclick="addProduct()">⚡ ADICIONAR PRODUTO</button>
-
     <div class="adm-products-list">
       <div class="adm-title" style="font-size:0.85rem; margin-bottom:16px; margin-top:10px;">📋 GERENCIAR PRODUTOS</div>
       <div id="admList"></div>
     </div>
-
     <button class="btn-adm btn-danger" onclick="logout()" style="margin-top:30px;">🔒 SAIR DO PAINEL</button>
   </div>
 </section>
@@ -821,90 +823,27 @@
   <div style="margin-top:6px;">WHATSAPP: (67) 99855-7762</div>
 </footer>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
-// ===== DATA =====
 let products = [
-  {
-    name: "CORONEL COM 4 VIPs",
-    vips: 4,
-    email: "OFF",
-    price: 79.99,
-    link: "https://br.crossfire.z8games.com/profile/6766468",
-    img: "",
-    status: "available"
-  },
-  {
-    name: "4 ESTRELAS COM 6 VIPs",
-    vips: 6,
-    email: "OFF",
-    price: 149.99,
-    link: "https://br.crossfire.z8games.com/profile/4228416",
-    img: "",
-    status: "available"
-  },
-  {
-    name: "MAJOR COM 12 VIPs",
-    vips: 12,
-    email: "ON",
-    price: 199.99,
-    link: "https://br.crossfire.z8games.com/profile/18452910",
-    img: "",
-    status: "available"
-  },
-  {
-    name: "MAJOR COM 20 VIPs",
-    vips: 20,
-    email: "ON",
-    price: 299.99,
-    link: "https://br.crossfire.z8games.com/profile/17713392",
-    img: "",
-    status: "available"
-  },
-  {
-    name: "MARECHAL COM 10 VIPs",
-    vips: 10,
-    email: "ON",
-    price: 299.99,
-    link: "https://br.crossfire.z8games.com/profile/1809510",
-    img: "",
-    status: "available"
-  },
-  {
-    name: "TENENTE CORONEL COM 20 VIPs",
-    vips: 20,
-    email: "ON",
-    price: 349.99,
-    link: "https://br.crossfire.z8games.com/profile/18258843",
-    img: "",
-    status: "available"
-  },
-  {
-    name: "3 ESTRELAS COM 28 VIPs",
-    vips: 28,
-    email: "ON",
-    price: 379.99,
-    link: "https://br.crossfire.z8games.com/profile/18056626",
-    img: "",
-    status: "available"
-  }
+  { name: "CORONEL COM 4 VIPs", vips: 4, email: "OFF", price: 79.99, link: "https://br.crossfire.z8games.com/profile/6766468", img: "", status: "available" },
+  { name: "4 ESTRELAS COM 6 VIPs", vips: 6, email: "OFF", price: 149.99, link: "https://br.crossfire.z8games.com/profile/4228416", img: "", status: "available" },
+  { name: "MAJOR COM 12 VIPs", vips: 12, email: "ON", price: 199.99, link: "https://br.crossfire.z8games.com/profile/18452910", img: "", status: "available" },
+  { name: "MAJOR COM 20 VIPs", vips: 20, email: "ON", price: 299.99, link: "https://br.crossfire.z8games.com/profile/17713392", img: "", status: "available" },
+  { name: "MARECHAL COM 10 VIPs", vips: 10, email: "ON", price: 299.99, link: "https://br.crossfire.z8games.com/profile/1809510", img: "", status: "available" },
+  { name: "TENENTE CORONEL COM 20 VIPs", vips: 20, email: "ON", price: 349.99, link: "https://br.crossfire.z8games.com/profile/18258843", img: "", status: "available" },
+  { name: "3 ESTRELAS COM 28 VIPs", vips: 28, email: "ON", price: 379.99, link: "https://br.crossfire.z8games.com/profile/18056626", img: "", status: "available" }
 ];
 
 const WHATSAPP = "5567998557762";
 const ADM_USER = "admin";
 const ADM_PASS = "fyzer2025";
 let isAdm = false;
+let newImgBase64 = '';
+let editImgBase64 = '';
 
-const rankIcons = {
-  "CORONEL": "🎖️",
-  "ESTRELAS": "⭐",
-  "MAJOR": "🏅",
-  "MARECHAL": "🦅",
-  "TENENTE": "🔱",
-  "GENERAL": "🌟"
-};
+const rankIcons = { "CORONEL": "🎖️", "ESTRELAS": "⭐", "MAJOR": "🏅", "MARECHAL": "🦅", "TENENTE": "🔱", "GENERAL": "🌟" };
 
 function getRankIcon(name) {
   for (let key in rankIcons) {
@@ -913,7 +852,6 @@ function getRankIcon(name) {
   return "🎮";
 }
 
-// ===== RENDER CATALOG =====
 function renderCatalog() {
   const grid = document.getElementById('productsGrid');
   grid.innerHTML = '';
@@ -922,7 +860,6 @@ function renderCatalog() {
     const imgContent = p.img
       ? `<img src="${p.img}" class="card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="card-img-placeholder" style="display:none">${icon}</div>`
       : `<div class="card-img-placeholder">${icon}</div>`;
-
     const card = document.createElement('div');
     card.className = 'card' + (p.status === 'sold' ? ' sold' : '');
     card.innerHTML = `
@@ -952,18 +889,11 @@ function renderCatalog() {
 function sendWhatsApp(i) {
   const p = products[i];
   const msg = encodeURIComponent(
-    `Olá! Tenho interesse na conta:\n\n` +
-    `🎮 *${p.name}*\n` +
-    `⭐ VIPs: ${p.vips}\n` +
-    `📧 E-mail: ${p.email}\n` +
-    `💰 Preço: R$ ${p.price.toFixed(2).replace('.', ',')}\n` +
-    `🔗 Perfil: ${p.link}\n\n` +
-    `Gostaria de mais informações!`
+    `Olá! Tenho interesse na conta:\n\n🎮 *${p.name}*\n⭐ VIPs: ${p.vips}\n📧 E-mail: ${p.email}\n💰 Preço: R$ ${p.price.toFixed(2).replace('.', ',')}\n🔗 Perfil: ${p.link}\n\nGostaria de mais informações!`
   );
   window.open(`https://wa.me/${WHATSAPP}?text=${msg}`, '_blank');
 }
 
-// ===== NAVIGATION =====
 function showSection(sec) {
   if (sec === 'adm' && !isAdm) {
     document.getElementById('loginModal').classList.add('show');
@@ -975,7 +905,6 @@ function showSection(sec) {
   if (sec === 'adm') renderAdmList();
 }
 
-// ===== LOGIN =====
 function doLogin() {
   const u = document.getElementById('admUser').value;
   const p = document.getElementById('admPass').value;
@@ -990,9 +919,7 @@ function doLogin() {
   }
 }
 
-function closeLogin() {
-  document.getElementById('loginModal').classList.remove('show');
-}
+function closeLogin() { document.getElementById('loginModal').classList.remove('show'); }
 
 function logout() {
   isAdm = false;
@@ -1000,7 +927,6 @@ function logout() {
   showToast('🔒 SESSÃO ENCERRADA');
 }
 
-// ===== ADM LIST =====
 function renderAdmList() {
   const list = document.getElementById('admList');
   list.innerHTML = '';
@@ -1020,31 +946,59 @@ function renderAdmList() {
   });
 }
 
-// ===== ADD PRODUCT =====
+function handleNewImgUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const label = document.getElementById('newUploadLabel');
+  label.textContent = '✅ ' + file.name;
+  label.classList.add('has-file');
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    newImgBase64 = e.target.result;
+    const prev = document.getElementById('imgPreview');
+    prev.src = newImgBase64;
+    prev.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleEditImgUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const label = document.getElementById('editUploadLabel');
+  label.textContent = '✅ ' + file.name;
+  label.classList.add('has-file');
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    editImgBase64 = e.target.result;
+    const prev = document.getElementById('editImgPreview');
+    prev.src = editImgBase64;
+    prev.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
 function addProduct() {
   const name = document.getElementById('newName').value.trim();
   const vips = parseInt(document.getElementById('newVips').value);
   const price = parseFloat(document.getElementById('newPrice').value);
   const email = document.getElementById('newEmail').value;
   const link = document.getElementById('newLink').value.trim();
-  const img = document.getElementById('newImg').value.trim();
   const status = document.getElementById('newStatus').value;
-
-  if (!name || isNaN(vips) || isNaN(price)) {
-    showToast('⚠️ PREENCHA OS CAMPOS OBRIGATÓRIOS');
-    return;
-  }
-
-  products.push({ name, vips, email, price, link, img, status });
+  if (!name || isNaN(vips) || isNaN(price)) { showToast('⚠️ PREENCHA OS CAMPOS OBRIGATÓRIOS'); return; }
+  products.push({ name, vips, email, price, link, img: newImgBase64, status });
   renderCatalog();
   renderAdmList();
   showToast('✅ PRODUTO ADICIONADO!');
-
-  ['newName','newVips','newPrice','newLink','newImg'].forEach(id => document.getElementById(id).value = '');
+  ['newName','newVips','newPrice','newLink'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('newImgFile').value = '';
   document.getElementById('imgPreview').style.display = 'none';
+  const label = document.getElementById('newUploadLabel');
+  label.textContent = '📷 ESCOLHER FOTO DO CELULAR / PC';
+  label.classList.remove('has-file');
+  newImgBase64 = '';
 }
 
-// ===== EDIT PRODUCT =====
 function openEdit(i) {
   const p = products[i];
   document.getElementById('editIndex').value = i;
@@ -1053,11 +1007,21 @@ function openEdit(i) {
   document.getElementById('editPrice').value = p.price;
   document.getElementById('editEmail').value = p.email;
   document.getElementById('editLink').value = p.link;
-  document.getElementById('editImg').value = p.img || '';
   document.getElementById('editStatus').value = p.status;
+  editImgBase64 = p.img || '';
   const prev = document.getElementById('editImgPreview');
-  if (p.img) { prev.src = p.img; prev.style.display = 'block'; }
-  else prev.style.display = 'none';
+  const editLabel = document.getElementById('editUploadLabel');
+  if (p.img) {
+    prev.src = p.img;
+    prev.style.display = 'block';
+    editLabel.textContent = '✅ Imagem carregada';
+    editLabel.classList.add('has-file');
+  } else {
+    prev.style.display = 'none';
+    editLabel.textContent = '📷 ESCOLHER FOTO DO CELULAR / PC';
+    editLabel.classList.remove('has-file');
+  }
+  document.getElementById('editImgFile').value = '';
   document.getElementById('editModal').classList.add('show');
 }
 
@@ -1069,7 +1033,7 @@ function saveEdit() {
     price: parseFloat(document.getElementById('editPrice').value),
     email: document.getElementById('editEmail').value,
     link: document.getElementById('editLink').value,
-    img: document.getElementById('editImg').value,
+    img: editImgBase64,
     status: document.getElementById('editStatus').value
   };
   renderCatalog();
@@ -1078,9 +1042,7 @@ function saveEdit() {
   showToast('✅ PRODUTO ATUALIZADO!');
 }
 
-function closeEdit() {
-  document.getElementById('editModal').classList.remove('show');
-}
+function closeEdit() { document.getElementById('editModal').classList.remove('show'); }
 
 function deleteProduct(i) {
   if (confirm('Excluir este produto?')) {
@@ -1091,20 +1053,6 @@ function deleteProduct(i) {
   }
 }
 
-// ===== IMAGE PREVIEW =====
-function previewImg(url) {
-  const img = document.getElementById('imgPreview');
-  if (url) { img.src = url; img.style.display = 'block'; }
-  else img.style.display = 'none';
-}
-
-function previewEditImg(url) {
-  const img = document.getElementById('editImgPreview');
-  if (url) { img.src = url; img.style.display = 'block'; }
-  else img.style.display = 'none';
-}
-
-// ===== TOAST =====
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -1112,14 +1060,10 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-// ===== LIGHTNING ANIMATION =====
+// Lightning
 const canvas = document.getElementById('lightning-canvas');
 const ctx = canvas.getContext('2d');
-
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
+function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
@@ -1131,12 +1075,9 @@ function drawLightning(x1, y1, x2, y2, branches, depth) {
   let pts = [{x: x1, y: y1}];
   for (let i = 1; i < segments; i++) {
     const t = i / segments;
-    const nx = x1 + dx * t + (Math.random() - 0.5) * 60;
-    const ny = y1 + dy * t + (Math.random() - 0.5) * 60;
-    pts.push({x: nx, y: ny});
+    pts.push({ x: x1 + dx * t + (Math.random() - 0.5) * 60, y: y1 + dy * t + (Math.random() - 0.5) * 60 });
   }
   pts.push({x: x2, y: y2});
-
   ctx.beginPath();
   ctx.moveTo(pts[0].x, pts[0].y);
   for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
@@ -1145,15 +1086,11 @@ function drawLightning(x1, y1, x2, y2, branches, depth) {
   ctx.shadowColor = '#00cfff';
   ctx.shadowBlur = 8;
   ctx.stroke();
-
   if (branches > 0) {
     const branchPt = pts[Math.floor(pts.length * 0.4 + Math.random() * pts.length * 0.3)];
     const angle = Math.atan2(dy, dx) + (Math.random() - 0.5) * 1.2;
     const bLen = len * 0.4;
-    drawLightning(branchPt.x, branchPt.y,
-      branchPt.x + Math.cos(angle) * bLen,
-      branchPt.y + Math.sin(angle) * bLen,
-      0, depth - 1);
+    drawLightning(branchPt.x, branchPt.y, branchPt.x + Math.cos(angle) * bLen, branchPt.y + Math.sin(angle) * bLen, 0, depth - 1);
   }
 }
 
@@ -1169,7 +1106,6 @@ function animateLightning(ts) {
 }
 requestAnimationFrame(animateLightning);
 
-// ===== INIT =====
 renderCatalog();
 </script>
 </body>
