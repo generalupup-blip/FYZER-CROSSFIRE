@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FYZER CROSSFIRE - Catálogo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
+
+  :root {
+    --blue1: #00cfff;
+    --blue2: #0077ff;
+    --blue3: #003a7a;
+    --dark: #020b18;
+    --dark2: #040f1f;
+    --card: #071428;
+    --glow: 0 0 10px #00cfff, 0 0 30px #0077ff55;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: #e0f4ff;
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== ELECTRICITY CANVAS ===== */
+  #lightning-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.18;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 40px 20px 20px;
+    background: linear-gradient(180deg, #000d1a 0%, transparent 100%);
+  }
+
+  .logo-wrap {
+    display: inline-block;
+    position: relative;
+  }
+
+  .logo-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: 900;
+    letter-spacing: 8px;
+    background: linear-gradient(90deg, #00cfff, #ffffff, #0077ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 0 18px #00cfff);
+    animation: pulse-logo 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-logo {
+    0%, 100% { filter: drop-shadow(0 0 18px #00cfff); }
+    50% { filter: drop-shadow(0 0 40px #00cfff) drop-shadow(0 0 80px #0077ff); }
+  }
+
+  .logo-sub {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(0.6rem, 2vw, 0.9rem);
+    letter-spacing: 6px;
+    color: var(--blue1);
+    opacity: 0.8;
+    margin-top: 4px;
+  }
+
+  .electric-bar {
+    width: 80%;
+    max-width: 600px;
+    height: 2px;
+    margin: 16px auto 0;
+    background: linear-gradient(90deg, transparent, var(--blue1), var(--blue2), var(--blue1), transparent);
+    position: relative;
+    overflow: visible;
+  }
+
+  .electric-bar::after {
+    content: '';
+    position: absolute;
+    top: -3px; left: 0;
+    width: 40px; height: 8px;
+    background: white;
+    border-radius: 50%;
+    filter: blur(4px);
+    animation: spark-run 2.5s linear infinite;
+  }
+
+  @keyframes spark-run {
+    0% { left: 0; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { left: calc(100% - 40px); opacity: 0; }
+  }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 16px 20px;
+    position: relative;
+    z-index: 10;
+    flex-wrap: wrap;
+  }
+
+  nav button {
+    background: transparent;
+    border: 1px solid var(--blue2);
+    color: var(--blue1);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+
+  nav button:hover, nav button.active {
+    background: var(--blue2);
+    color: white;
+    box-shadow: var(--glow);
+  }
+
+  /* ===== BANNER ===== */
+  .banner {
+    position: relative;
+    z-index: 5;
+    text-align: center;
+    padding: 20px;
+    margin: 0 20px 10px;
+    border: 1px solid #00cfff33;
+    background: linear-gradient(135deg, #00cfff11, #0077ff08);
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+    animation: border-glow 4s ease-in-out infinite;
+  }
+
+  @keyframes border-glow {
+    0%, 100% { border-color: #00cfff33; box-shadow: none; }
+    50% { border-color: #00cfff88; box-shadow: 0 0 20px #00cfff22; }
+  }
+
+  .banner p {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(0.7rem, 2vw, 1rem);
+    color: var(--blue1);
+    letter-spacing: 3px;
+    animation: flicker 5s infinite;
+  }
+
+  @keyframes flicker {
+    0%, 95%, 100% { opacity: 1; }
+    96% { opacity: 0.4; }
+    97% { opacity: 1; }
+    98% { opacity: 0.6; }
+  }
+
+  /* ===== CATALOG SECTION ===== */
+  #catalog-section {
+    position: relative;
+    z-index: 5;
+    padding: 20px;
+  }
+
+  .section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 4px;
+    color: var(--blue1);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--blue2), transparent);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  /* ===== PRODUCT CARD ===== */
+  .card {
+    background: var(--card);
+    border: 1px solid #00cfff22;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+    cursor: pointer;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px; right: -2px; bottom: -2px;
+    background: linear-gradient(135deg, var(--blue1), transparent, var(--blue2));
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 40px #00cfff33, 0 0 60px #0077ff22;
+    border-color: var(--blue1);
+  }
+
+  .card:hover::before { opacity: 0.3; }
+
+  .card-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    background: linear-gradient(135deg, #0a1f3a, #071428);
+    position: relative;
+  }
+
+  .card-img-placeholder {
+    width: 100%;
+    height: 180px;
+    background: linear-gradient(135deg, #0a1f3a 0%, #071428 50%, #0a1f3a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-img-placeholder::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, #00cfff11, transparent);
+    animation: shimmer 3s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 200%; }
+  }
+
+  .rank-badge {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: linear-gradient(135deg, var(--blue2), var(--blue3));
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+    box-shadow: 0 0 10px #0077ff88;
+  }
+
+  .card-body {
+    padding: 16px;
+  }
+
+  .card-rank {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 6px;
+    text-shadow: 0 0 10px var(--blue1);
+  }
+
+  .card-details {
+    font-size: 0.85rem;
+    color: #7ab8d4;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .card-details span.dot {
+    width: 6px; height: 6px;
+    background: var(--blue1);
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 6px var(--blue1);
+  }
+
+  .email-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  .email-on { background: #00ff8822; color: #00ff88; border: 1px solid #00ff8844; }
+  .email-off { background: #ff444422; color: #ff6666; border: 1px solid #ff444444; }
+
+  .card-price {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--blue1);
+    text-shadow: 0 0 15px var(--blue1);
+    margin: 10px 0;
+  }
+
+  .card-price span {
+    font-size: 0.8rem;
+    color: #7ab8d4;
+    font-weight: 400;
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .btn-whatsapp {
+    flex: 1;
+    background: linear-gradient(135deg, #00c853, #00a040);
+    color: white;
+    border: none;
+    padding: 10px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .btn-whatsapp:hover {
+    box-shadow: 0 0 20px #00c85388;
+    transform: scale(1.03);
+  }
+
+  .btn-profile {
+    background: transparent;
+    border: 1px solid var(--blue2);
+    color: var(--blue1);
+    padding: 10px 14px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.65rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+  }
+
+  .btn-profile:hover {
+    background: var(--blue2);
+    color: white;
+    box-shadow: var(--glow);
+  }
+
+  /* ===== ADM PANEL ===== */
+  #adm-section {
+    display: none;
+    position: relative;
+    z-index: 5;
+    padding: 20px;
+  }
+
+  .adm-panel {
+    background: var(--card);
+    border: 1px solid var(--blue2);
+    padding: 30px;
+    box-shadow: 0 0 30px #0077ff22;
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .adm-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    color: var(--blue1);
+    letter-spacing: 4px;
+    margin-bottom: 24px;
+    text-align: center;
+    text-shadow: 0 0 15px var(--blue1);
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-group label {
+    display: block;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: var(--blue1);
+    margin-bottom: 6px;
+  }
+
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    background: #040f1f;
+    border: 1px solid #00cfff33;
+    color: #e0f4ff;
+    padding: 10px 14px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--blue1);
+    box-shadow: 0 0 10px #00cfff22;
+  }
+
+  .form-group select option { background: #040f1f; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .btn-adm {
+    width: 100%;
+    background: linear-gradient(135deg, var(--blue2), #0055cc);
+    color: white;
+    border: none;
+    padding: 14px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 8px;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  }
+
+  .btn-adm:hover {
+    box-shadow: var(--glow);
+    transform: scale(1.02);
+  }
+
+  .btn-danger {
+    background: linear-gradient(135deg, #cc0000, #880000);
+    margin-top: 4px;
+  }
+
+  .btn-danger:hover { box-shadow: 0 0 20px #cc000088; }
+
+  .adm-products-list {
+    margin-top: 30px;
+  }
+
+  .adm-product-item {
+    background: #040f1f;
+    border: 1px solid #00cfff22;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .adm-product-item span {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    color: var(--blue1);
+  }
+
+  .adm-product-item .price-edit {
+    color: #00ff88;
+  }
+
+  .adm-btns { display: flex; gap: 6px; }
+
+  .btn-sm {
+    padding: 5px 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-edit { background: var(--blue2); color: white; }
+  .btn-del { background: #cc0000; color: white; }
+  .btn-sm:hover { opacity: 0.8; transform: scale(1.05); }
+
+  /* ===== LOGIN MODAL ===== */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #000000cc;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-overlay.show { display: flex; }
+
+  .modal-box {
+    background: var(--dark2);
+    border: 1px solid var(--blue1);
+    padding: 40px;
+    width: 90%;
+    max-width: 380px;
+    box-shadow: 0 0 60px #00cfff44;
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+    position: relative;
+    animation: modal-in 0.3s ease;
+  }
+
+  @keyframes modal-in {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .modal-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 4px;
+    color: var(--blue1);
+    text-align: center;
+    margin-bottom: 24px;
+    text-shadow: 0 0 15px var(--blue1);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 12px; right: 16px;
+    background: none;
+    border: none;
+    color: var(--blue1);
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+
+  .alert {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+    border-radius: 2px;
+    display: none;
+  }
+
+  .alert-error { background: #cc000022; border: 1px solid #cc0000; color: #ff6666; }
+  .alert-success { background: #00cc5522; border: 1px solid #00cc55; color: #00ff88; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    position: relative;
+    z-index: 5;
+    text-align: center;
+    padding: 30px 20px;
+    margin-top: 40px;
+    border-top: 1px solid #00cfff22;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    color: #3a6a8a;
+  }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed;
+    bottom: 30px; right: 30px;
+    background: var(--card);
+    border: 1px solid var(--blue1);
+    color: var(--blue1);
+    padding: 12px 20px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    z-index: 9999;
+    box-shadow: var(--glow);
+    transform: translateX(200%);
+    transition: transform 0.4s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+
+  .toast.show { transform: translateX(0); }
+
+  /* ===== EDIT MODAL ===== */
+  .edit-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #000000cc;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+
+  .edit-modal.show { display: flex; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--dark); }
+  ::-webkit-scrollbar-thumb { background: var(--blue2); border-radius: 3px; }
+
+  .img-preview {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    margin-top: 8px;
+    border: 1px solid #00cfff33;
+    display: none;
+  }
+
+  .sold-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-20deg);
+    background: #cc000099;
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    padding: 8px 20px;
+    border: 2px solid #ff0000;
+    letter-spacing: 4px;
+    pointer-events: none;
+    display: none;
+  }
+
+  .card.sold { opacity: 0.5; }
+  .card.sold .sold-badge { display: block; }
+</style>
+</head>
+<body>
+
+<!-- Lightning Canvas -->
+<canvas id="lightning-canvas"></canvas>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeLogin()">✕</button>
+    <div class="modal-title">⚡ ACESSO ADM ⚡</div>
+    <div class="alert alert-error" id="loginError">Senha incorreta!</div>
+    <div class="form-group">
+      <label>USUÁRIO</label>
+      <input type="text" id="admUser" placeholder="admin" />
+    </div>
+    <div class="form-group">
+      <label>SENHA</label>
+      <input type="password" id="admPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" />
+    </div>
+    <button class="btn-adm" onclick="doLogin()">ENTRAR NO SISTEMA</button>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="edit-modal" id="editModal">
+  <div class="modal-box" style="max-width:500px">
+    <button class="modal-close" onclick="closeEdit()">✕</button>
+    <div class="modal-title">✏ EDITAR PRODUTO</div>
+    <input type="hidden" id="editIndex" />
+    <div class="form-group">
+      <label>NOME / RANK</label>
+      <input type="text" id="editName" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>VIPs</label>
+        <input type="number" id="editVips" />
+      </div>
+      <div class="form-group">
+        <label>PREÇO (R$)</label>
+        <input type="number" step="0.01" id="editPrice" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>E-MAIL</label>
+      <select id="editEmail">
+        <option value="ON">ON</option>
+        <option value="OFF">OFF</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>LINK DO PERFIL</label>
+      <input type="text" id="editLink" />
+    </div>
+    <div class="form-group">
+      <label>URL DA IMAGEM</label>
+      <input type="text" id="editImg" placeholder="https://..." oninput="previewEditImg(this.value)" />
+      <img id="editImgPreview" class="img-preview" />
+    </div>
+    <div class="form-group">
+      <label>STATUS</label>
+      <select id="editStatus">
+        <option value="available">Disponível</option>
+        <option value="sold">Vendido</option>
+      </select>
+    </div>
+    <button class="btn-adm" onclick="saveEdit()">SALVAR ALTERAÇÕES</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-wrap">
+    <div class="logo-title">⚡ FYZER CROSSFIRE ⚡</div>
+    <div class="logo-sub">CONTAS PREMIUM · CROSSFIRE BR</div>
+  </div>
+  <div class="electric-bar"></div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <button class="active" onclick="showSection('catalog')">🎮 CATÁLOGO</button>
+  <button onclick="showSection('adm')" id="admNavBtn">🔐 PAINEL ADM</button>
+</nav>
+
+<!-- BANNER -->
+<div class="banner">
+  <p>⚡ PARCELAMOS COM PIX · ENTREGA IMEDIATA · SUPORTE VIA WHATSAPP ⚡</p>
+</div>
+
+<!-- CATALOG -->
+<section id="catalog-section">
+  <div class="section-title">🎯 CONTAS DISPONÍVEIS</div>
+  <div class="grid" id="productsGrid"></div>
+</section>
+
+<!-- ADM PANEL -->
+<section id="adm-section">
+  <div class="adm-panel">
+    <div class="adm-title">⚡ PAINEL ADMINISTRATIVO ⚡</div>
+
+    <div class="adm-title" style="font-size:0.85rem; margin-bottom:16px;">➕ ADICIONAR NOVO PRODUTO</div>
+
+    <div class="form-group">
+      <label>NOME / RANK</label>
+      <input type="text" id="newName" placeholder="Ex: GENERAL COM 5 VIPs" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>QUANTIDADE DE VIPs</label>
+        <input type="number" id="newVips" placeholder="Ex: 10" />
+      </div>
+      <div class="form-group">
+        <label>PREÇO (R$)</label>
+        <input type="number" step="0.01" id="newPrice" placeholder="Ex: 199.99" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>E-MAIL</label>
+        <select id="newEmail">
+          <option value="ON">ON</option>
+          <option value="OFF">OFF</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>STATUS</label>
+        <select id="newStatus">
+          <option value="available">Disponível</option>
+          <option value="sold">Vendido</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>LINK DO PERFIL</label>
+      <input type="text" id="newLink" placeholder="https://br.crossfire.z8games.com/profile/..." />
+    </div>
+    <div class="form-group">
+      <label>URL DA IMAGEM DO PRODUTO</label>
+      <input type="text" id="newImg" placeholder="https://..." oninput="previewImg(this.value)" />
+      <img id="imgPreview" class="img-preview" />
+    </div>
+    <button class="btn-adm" onclick="addProduct()">⚡ ADICIONAR PRODUTO</button>
+
+    <div class="adm-products-list">
+      <div class="adm-title" style="font-size:0.85rem; margin-bottom:16px; margin-top:10px;">📋 GERENCIAR PRODUTOS</div>
+      <div id="admList"></div>
+    </div>
+
+    <button class="btn-adm btn-danger" onclick="logout()" style="margin-top:30px;">🔒 SAIR DO PAINEL</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>⚡ FYZER CROSSFIRE © 2025 · TODOS OS DIREITOS RESERVADOS ⚡</div>
+  <div style="margin-top:6px;">WHATSAPP: (67) 99855-7762</div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DATA =====
+let products = [
+  {
+    name: "CORONEL COM 4 VIPs",
+    vips: 4,
+    email: "OFF",
+    price: 79.99,
+    link: "https://br.crossfire.z8games.com/profile/6766468",
+    img: "",
+    status: "available"
+  },
+  {
+    name: "4 ESTRELAS COM 6 VIPs",
+    vips: 6,
+    email: "OFF",
+    price: 149.99,
+    link: "https://br.crossfire.z8games.com/profile/4228416",
+    img: "",
+    status: "available"
+  },
+  {
+    name: "MAJOR COM 12 VIPs",
+    vips: 12,
+    email: "ON",
+    price: 199.99,
+    link: "https://br.crossfire.z8games.com/profile/18452910",
+    img: "",
+    status: "available"
+  },
+  {
+    name: "MAJOR COM 20 VIPs",
+    vips: 20,
+    email: "ON",
+    price: 299.99,
+    link: "https://br.crossfire.z8games.com/profile/17713392",
+    img: "",
+    status: "available"
+  },
+  {
+    name: "MARECHAL COM 10 VIPs",
+    vips: 10,
+    email: "ON",
+    price: 299.99,
+    link: "https://br.crossfire.z8games.com/profile/1809510",
+    img: "",
+    status: "available"
+  },
+  {
+    name: "TENENTE CORONEL COM 20 VIPs",
+    vips: 20,
+    email: "ON",
+    price: 349.99,
+    link: "https://br.crossfire.z8games.com/profile/18258843",
+    img: "",
+    status: "available"
+  },
+  {
+    name: "3 ESTRELAS COM 28 VIPs",
+    vips: 28,
+    email: "ON",
+    price: 379.99,
+    link: "https://br.crossfire.z8games.com/profile/18056626",
+    img: "",
+    status: "available"
+  }
+];
+
+const WHATSAPP = "5567998557762";
+const ADM_USER = "admin";
+const ADM_PASS = "fyzer2025";
+let isAdm = false;
+
+const rankIcons = {
+  "CORONEL": "🎖️",
+  "ESTRELAS": "⭐",
+  "MAJOR": "🏅",
+  "MARECHAL": "🦅",
+  "TENENTE": "🔱",
+  "GENERAL": "🌟"
+};
+
+function getRankIcon(name) {
+  for (let key in rankIcons) {
+    if (name.toUpperCase().includes(key)) return rankIcons[key];
+  }
+  return "🎮";
+}
+
+// ===== RENDER CATALOG =====
+function renderCatalog() {
+  const grid = document.getElementById('productsGrid');
+  grid.innerHTML = '';
+  products.forEach((p, i) => {
+    const icon = getRankIcon(p.name);
+    const imgContent = p.img
+      ? `<img src="${p.img}" class="card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="card-img-placeholder" style="display:none">${icon}</div>`
+      : `<div class="card-img-placeholder">${icon}</div>`;
+
+    const card = document.createElement('div');
+    card.className = 'card' + (p.status === 'sold' ? ' sold' : '');
+    card.innerHTML = `
+      <div style="position:relative">
+        ${imgContent}
+        <div class="rank-badge">${p.vips} VIPs</div>
+        <div class="sold-badge">VENDIDO</div>
+      </div>
+      <div class="card-body">
+        <div class="card-rank">${p.name}</div>
+        <div class="card-details"><span class="dot"></span> ${p.vips} VIPs inclusos</div>
+        <div class="email-badge email-${p.email.toLowerCase()}">E-MAIL ${p.email}</div>
+        <div class="card-price">R$ ${p.price.toFixed(2).replace('.', ',')} <span>VIA PIX</span></div>
+        <div class="card-actions">
+          <button class="btn-whatsapp" onclick="sendWhatsApp(${i})" ${p.status === 'sold' ? 'disabled style="opacity:0.4;cursor:not-allowed"' : ''}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            TENHO INTERESSE
+          </button>
+          <a class="btn-profile" href="${p.link}" target="_blank">VER PERFIL</a>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function sendWhatsApp(i) {
+  const p = products[i];
+  const msg = encodeURIComponent(
+    `Olá! Tenho interesse na conta:\n\n` +
+    `🎮 *${p.name}*\n` +
+    `⭐ VIPs: ${p.vips}\n` +
+    `📧 E-mail: ${p.email}\n` +
+    `💰 Preço: R$ ${p.price.toFixed(2).replace('.', ',')}\n` +
+    `🔗 Perfil: ${p.link}\n\n` +
+    `Gostaria de mais informações!`
+  );
+  window.open(`https://wa.me/${WHATSAPP}?text=${msg}`, '_blank');
+}
+
+// ===== NAVIGATION =====
+function showSection(sec) {
+  if (sec === 'adm' && !isAdm) {
+    document.getElementById('loginModal').classList.add('show');
+    return;
+  }
+  document.getElementById('catalog-section').style.display = sec === 'catalog' ? 'block' : 'none';
+  document.getElementById('adm-section').style.display = sec === 'adm' ? 'block' : 'none';
+  document.querySelectorAll('nav button').forEach((b, i) => b.classList.toggle('active', i === (sec === 'catalog' ? 0 : 1)));
+  if (sec === 'adm') renderAdmList();
+}
+
+// ===== LOGIN =====
+function doLogin() {
+  const u = document.getElementById('admUser').value;
+  const p = document.getElementById('admPass').value;
+  if (u === ADM_USER && p === ADM_PASS) {
+    isAdm = true;
+    document.getElementById('loginModal').classList.remove('show');
+    showSection('adm');
+    showToast('✅ ACESSO LIBERADO');
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+    setTimeout(() => document.getElementById('loginError').style.display = 'none', 3000);
+  }
+}
+
+function closeLogin() {
+  document.getElementById('loginModal').classList.remove('show');
+}
+
+function logout() {
+  isAdm = false;
+  showSection('catalog');
+  showToast('🔒 SESSÃO ENCERRADA');
+}
+
+// ===== ADM LIST =====
+function renderAdmList() {
+  const list = document.getElementById('admList');
+  list.innerHTML = '';
+  products.forEach((p, i) => {
+    const item = document.createElement('div');
+    item.className = 'adm-product-item';
+    item.innerHTML = `
+      <span>${p.name}</span>
+      <span class="price-edit">R$ ${p.price.toFixed(2).replace('.', ',')}</span>
+      <span style="color:${p.status==='sold'?'#ff6666':'#00ff88'}">${p.status === 'sold' ? 'VENDIDO' : 'DISPONÍVEL'}</span>
+      <div class="adm-btns">
+        <button class="btn-sm btn-edit" onclick="openEdit(${i})">EDITAR</button>
+        <button class="btn-sm btn-del" onclick="deleteProduct(${i})">EXCLUIR</button>
+      </div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+// ===== ADD PRODUCT =====
+function addProduct() {
+  const name = document.getElementById('newName').value.trim();
+  const vips = parseInt(document.getElementById('newVips').value);
+  const price = parseFloat(document.getElementById('newPrice').value);
+  const email = document.getElementById('newEmail').value;
+  const link = document.getElementById('newLink').value.trim();
+  const img = document.getElementById('newImg').value.trim();
+  const status = document.getElementById('newStatus').value;
+
+  if (!name || isNaN(vips) || isNaN(price)) {
+    showToast('⚠️ PREENCHA OS CAMPOS OBRIGATÓRIOS');
+    return;
+  }
+
+  products.push({ name, vips, email, price, link, img, status });
+  renderCatalog();
+  renderAdmList();
+  showToast('✅ PRODUTO ADICIONADO!');
+
+  ['newName','newVips','newPrice','newLink','newImg'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('imgPreview').style.display = 'none';
+}
+
+// ===== EDIT PRODUCT =====
+function openEdit(i) {
+  const p = products[i];
+  document.getElementById('editIndex').value = i;
+  document.getElementById('editName').value = p.name;
+  document.getElementById('editVips').value = p.vips;
+  document.getElementById('editPrice').value = p.price;
+  document.getElementById('editEmail').value = p.email;
+  document.getElementById('editLink').value = p.link;
+  document.getElementById('editImg').value = p.img || '';
+  document.getElementById('editStatus').value = p.status;
+  const prev = document.getElementById('editImgPreview');
+  if (p.img) { prev.src = p.img; prev.style.display = 'block'; }
+  else prev.style.display = 'none';
+  document.getElementById('editModal').classList.add('show');
+}
+
+function saveEdit() {
+  const i = parseInt(document.getElementById('editIndex').value);
+  products[i] = {
+    name: document.getElementById('editName').value,
+    vips: parseInt(document.getElementById('editVips').value),
+    price: parseFloat(document.getElementById('editPrice').value),
+    email: document.getElementById('editEmail').value,
+    link: document.getElementById('editLink').value,
+    img: document.getElementById('editImg').value,
+    status: document.getElementById('editStatus').value
+  };
+  renderCatalog();
+  renderAdmList();
+  closeEdit();
+  showToast('✅ PRODUTO ATUALIZADO!');
+}
+
+function closeEdit() {
+  document.getElementById('editModal').classList.remove('show');
+}
+
+function deleteProduct(i) {
+  if (confirm('Excluir este produto?')) {
+    products.splice(i, 1);
+    renderCatalog();
+    renderAdmList();
+    showToast('🗑️ PRODUTO REMOVIDO');
+  }
+}
+
+// ===== IMAGE PREVIEW =====
+function previewImg(url) {
+  const img = document.getElementById('imgPreview');
+  if (url) { img.src = url; img.style.display = 'block'; }
+  else img.style.display = 'none';
+}
+
+function previewEditImg(url) {
+  const img = document.getElementById('editImgPreview');
+  if (url) { img.src = url; img.style.display = 'block'; }
+  else img.style.display = 'none';
+}
+
+// ===== TOAST =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ===== LIGHTNING ANIMATION =====
+const canvas = document.getElementById('lightning-canvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function drawLightning(x1, y1, x2, y2, branches, depth) {
+  if (depth <= 0) return;
+  const dx = x2 - x1, dy = y2 - y1;
+  const len = Math.sqrt(dx*dx + dy*dy);
+  const segments = Math.max(4, Math.floor(len / 40));
+  let pts = [{x: x1, y: y1}];
+  for (let i = 1; i < segments; i++) {
+    const t = i / segments;
+    const nx = x1 + dx * t + (Math.random() - 0.5) * 60;
+    const ny = y1 + dy * t + (Math.random() - 0.5) * 60;
+    pts.push({x: nx, y: ny});
+  }
+  pts.push({x: x2, y: y2});
+
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, pts[0].y);
+  for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+  ctx.strokeStyle = `rgba(0, 180, 255, ${0.3 + depth * 0.15})`;
+  ctx.lineWidth = depth * 0.8;
+  ctx.shadowColor = '#00cfff';
+  ctx.shadowBlur = 8;
+  ctx.stroke();
+
+  if (branches > 0) {
+    const branchPt = pts[Math.floor(pts.length * 0.4 + Math.random() * pts.length * 0.3)];
+    const angle = Math.atan2(dy, dx) + (Math.random() - 0.5) * 1.2;
+    const bLen = len * 0.4;
+    drawLightning(branchPt.x, branchPt.y,
+      branchPt.x + Math.cos(angle) * bLen,
+      branchPt.y + Math.sin(angle) * bLen,
+      0, depth - 1);
+  }
+}
+
+let lightningTimer = 0;
+function animateLightning(ts) {
+  requestAnimationFrame(animateLightning);
+  if (ts - lightningTimer < 1800 + Math.random() * 2000) return;
+  lightningTimer = ts;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const x = Math.random() * canvas.width;
+  drawLightning(x, 0, x + (Math.random()-0.5)*200, canvas.height * 0.6, 2, 3);
+  setTimeout(() => ctx.clearRect(0, 0, canvas.width, canvas.height), 200);
+}
+requestAnimationFrame(animateLightning);
+
+// ===== INIT =====
+renderCatalog();
+</script>
+</body>
+</html>
