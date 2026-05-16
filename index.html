@@ -846,7 +846,6 @@
 </script>
 
 <script type="module">
-  // FIREBASE CONFIGURAÇÃO
   import { initializeApp } from "firebase/app";
   import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
   
@@ -859,7 +858,6 @@
     appId: "1:720914253285:web:842c12214e2a6bed67db0c"
   };
   
-  // Inicializar Firebase
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const productsCol = collection(db, "products");
@@ -874,7 +872,7 @@
   const ADM_USER = "admin";
   const ADM_PASS = "fyzer2025";
   
-  // TODOS OS 7 PRODUTOS ORIGINAIS
+  // 7 PRODUTOS ORIGINAIS
   const initialProducts = [
     { name: "CORONEL COM 4 VIPs", vips: 4, email: "OFF", price: 79.99, link: "https://br.crossfire.z8games.com/profile/6766468", img: "", status: "available" },
     { name: "4 ESTRELAS COM 6 VIPs", vips: 6, email: "OFF", price: 149.99, link: "https://br.crossfire.z8games.com/profile/4228416", img: "", status: "available" },
@@ -899,22 +897,18 @@
       const snapshot = await getDocs(productsCol);
       
       if (snapshot.empty) {
-        // Adiciona todos os 7 produtos iniciais
         for (const product of initialProducts) {
           await addDoc(productsCol, product);
         }
         console.log("7 produtos adicionados ao Firebase!");
         showToast("✅ 7 produtos carregados com sucesso!");
       }
-      
-      // Carrega os produtos
       await loadProducts();
-      
     } catch (error) {
       console.error("Erro na inicialização:", error);
       const grid = document.getElementById('productsGrid');
-      if (grid) grid.innerHTML = '<div class="loading">❌ ERRO: Firebase não configurado<br>Verifique as regras do Firestore</div>';
-      showToast("❌ Erro ao conectar com Firebase");
+      if (grid) grid.innerHTML = '<div class="loading">❌ ERRO: Firebase não configurado corretamente.<br>Verifique as regras do Firestore</div>';
+      showToast("❌ Erro ao conectar com Firebase. Verifique as regras.");
     }
   }
   
@@ -938,12 +932,10 @@
   function renderCatalog() {
     const grid = document.getElementById('productsGrid');
     if (!grid) return;
-    
     if (products.length === 0) {
       grid.innerHTML = '<div class="loading">📭 NENHUM PRODUTO CADASTRADO</div>';
       return;
     }
-    
     grid.innerHTML = '';
     products.forEach((p) => {
       const icon = getRankIcon(p.name);
@@ -1013,7 +1005,6 @@
   }
   
   function closeLogin() { document.getElementById('loginModal').classList.remove('show'); }
-  
   function logout() {
     isAdm = false;
     showSection('catalog');
@@ -1079,12 +1070,7 @@
     const email = document.getElementById('newEmail').value;
     const link = document.getElementById('newLink').value.trim();
     const status = document.getElementById('newStatus').value;
-    
-    if (!name || isNaN(vips) || isNaN(price)) { 
-      showToast('⚠️ PREENCHA OS CAMPOS OBRIGATÓRIOS'); 
-      return; 
-    }
-    
+    if (!name || isNaN(vips) || isNaN(price)) { showToast('⚠️ PREENCHA OS CAMPOS OBRIGATÓRIOS'); return; }
     try {
       const newProduct = { name, vips, email, price, link, img: newImgBase64 || '', status };
       const docRef = await addDoc(productsCol, newProduct);
@@ -1093,7 +1079,6 @@
       renderCatalog();
       renderAdmList();
       showToast('✅ PRODUTO ADICIONADO!');
-      
       document.getElementById('newName').value = '';
       document.getElementById('newVips').value = '';
       document.getElementById('newPrice').value = '';
@@ -1152,9 +1137,7 @@
       const productRef = doc(db, "products", currentEditId);
       await updateDoc(productRef, updatedProduct);
       const index = products.findIndex(p => p.id === currentEditId);
-      if (index !== -1) {
-        products[index] = { ...updatedProduct, id: currentEditId };
-      }
+      if (index !== -1) products[index] = { ...updatedProduct, id: currentEditId };
       renderCatalog();
       renderAdmList();
       closeEdit();
@@ -1165,10 +1148,7 @@
     }
   }
   
-  function closeEdit() { 
-    document.getElementById('editModal').classList.remove('show');
-    currentEditId = null;
-  }
+  function closeEdit() { document.getElementById('editModal').classList.remove('show'); currentEditId = null; }
   
   window.deleteProduct = async function(id) {
     if (confirm('Excluir este produto?')) {
@@ -1192,7 +1172,7 @@
     setTimeout(() => t.classList.remove('show'), 3000);
   }
   
-  // Lightning Effect
+  // Lightning effect
   const canvas = document.getElementById('lightning-canvas');
   const ctx = canvas.getContext('2d');
   function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
@@ -1238,7 +1218,6 @@
   }
   requestAnimationFrame(animateLightning);
   
-  // Expor funções globais
   window.showSection = showSection;
   window.doLogin = doLogin;
   window.closeLogin = closeLogin;
@@ -1249,7 +1228,6 @@
   window.handleNewImgUpload = handleNewImgUpload;
   window.handleEditImgUpload = handleEditImgUpload;
   
-  // INICIAR TUDO
   initializeAndLoad();
 </script>
 </body>
