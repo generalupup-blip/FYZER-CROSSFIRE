@@ -846,10 +846,10 @@
 </script>
 
 <script type="module">
+  // FIREBASE CONFIGURAÇÃO
   import { initializeApp } from "firebase/app";
   import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
   
-  // Firebase configuration com o appId correto
   const firebaseConfig = {
     apiKey: "AIzaSyBuKdPxn_bK6PmJOU4kpITQ555ikJKsIK0",
     authDomain: "fyzer-59f62.firebaseapp.com",
@@ -859,7 +859,7 @@
     appId: "1:720914253285:web:842c12214e2a6bed67db0c"
   };
   
-  // Initialize Firebase
+  // Inicializar Firebase
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const productsCol = collection(db, "products");
@@ -913,7 +913,7 @@
     } catch (error) {
       console.error("Erro na inicialização:", error);
       const grid = document.getElementById('productsGrid');
-      if (grid) grid.innerHTML = '<div class="loading">❌ ERRO: Firebase não configurado corretamente.<br>Verifique as regras do Firestore</div>';
+      if (grid) grid.innerHTML = '<div class="loading">❌ ERRO: Firebase não configurado<br>Verifique as regras do Firestore</div>';
       showToast("❌ Erro ao conectar com Firebase");
     }
   }
@@ -1249,7 +1249,7 @@
   window.handleNewImgUpload = handleNewImgUpload;
   window.handleEditImgUpload = handleEditImgUpload;
   
-  // Iniciar tudo
+  // INICIAR TUDO
   initializeAndLoad();
 </script>
 </body>
