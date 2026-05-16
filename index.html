@@ -661,6 +661,14 @@
 
   .card.sold { opacity: 0.5; }
   .card.sold .sold-badge { display: block; }
+  
+  .loading {
+    text-align: center;
+    padding: 40px;
+    font-family: 'Orbitron', sans-serif;
+    color: var(--blue1);
+    font-size: 1.2rem;
+  }
 </style>
 </head>
 <body>
@@ -690,7 +698,7 @@
   <div class="modal-box" style="max-width:500px">
     <button class="modal-close" onclick="closeEdit()">✕</button>
     <div class="modal-title">✏ EDITAR PRODUTO</div>
-    <input type="hidden" id="editIndex" />
+    <input type="hidden" id="editId" />
     <div class="form-group">
       <label>NOME / RANK</label>
       <input type="text" id="editName" />
@@ -753,12 +761,15 @@
 <!-- BANNER -->
 <div class="banner">
   <p>⚡ PARCELAMOS COM PIX · ENTREGA IMEDIATA · SUPORTE VIA WHATSAPP ⚡</p>
+  <p style="font-size:0.7rem; margin-top:5px;">★ ACESSE O LINK DE PERFIL PRA AVALIAR A CONTA ★</p>
 </div>
 
 <!-- CATALOG -->
 <section id="catalog-section">
   <div class="section-title">🎯 CONTAS DISPONÍVEIS</div>
-  <div class="grid" id="productsGrid"></div>
+  <div class="grid" id="productsGrid">
+    <div class="loading">⚡ CARREGANDO PRODUTOS... ⚡</div>
+  </div>
 </section>
 
 <!-- ADM PANEL -->
@@ -825,288 +836,421 @@
 
 <div class="toast" id="toast"></div>
 
-<script>
-let products = [
-  { name: "CORONEL COM 4 VIPs", vips: 4, email: "OFF", price: 79.99, link: "https://br.crossfire.z8games.com/profile/6766468", img: "", status: "available" },
-  { name: "4 ESTRELAS COM 6 VIPs", vips: 6, email: "OFF", price: 149.99, link: "https://br.crossfire.z8games.com/profile/4228416", img: "", status: "available" },
-  { name: "MAJOR COM 12 VIPs", vips: 12, email: "ON", price: 199.99, link: "https://br.crossfire.z8games.com/profile/18452910", img: "", status: "available" },
-  { name: "MAJOR COM 20 VIPs", vips: 20, email: "ON", price: 299.99, link: "https://br.crossfire.z8games.com/profile/17713392", img: "", status: "available" },
-  { name: "MARECHAL COM 10 VIPs", vips: 10, email: "ON", price: 299.99, link: "https://br.crossfire.z8games.com/profile/1809510", img: "", status: "available" },
-  { name: "TENENTE CORONEL COM 20 VIPs", vips: 20, email: "ON", price: 349.99, link: "https://br.crossfire.z8games.com/profile/18258843", img: "", status: "available" },
-  { name: "3 ESTRELAS COM 28 VIPs", vips: 28, email: "ON", price: 379.99, link: "https://br.crossfire.z8games.com/profile/18056626", img: "", status: "available" }
-];
-
-const WHATSAPP = "5567998557762";
-const ADM_USER = "admin";
-const ADM_PASS = "fyzer2025";
-let isAdm = false;
-let newImgBase64 = '';
-let editImgBase64 = '';
-
-const rankIcons = { "CORONEL": "🎖️", "ESTRELAS": "⭐", "MAJOR": "🏅", "MARECHAL": "🦅", "TENENTE": "🔱", "GENERAL": "🌟" };
-
-function getRankIcon(name) {
-  for (let key in rankIcons) {
-    if (name.toUpperCase().includes(key)) return rankIcons[key];
+<script type="importmap">
+  {
+    "imports": {
+      "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+      "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+    }
   }
-  return "🎮";
-}
+</script>
 
-function renderCatalog() {
-  const grid = document.getElementById('productsGrid');
-  grid.innerHTML = '';
-  products.forEach((p, i) => {
-    const icon = getRankIcon(p.name);
-    const imgContent = p.img
-      ? `<img src="${p.img}" class="card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="card-img-placeholder" style="display:none">${icon}</div>`
-      : `<div class="card-img-placeholder">${icon}</div>`;
-    const card = document.createElement('div');
-    card.className = 'card' + (p.status === 'sold' ? ' sold' : '');
-    card.innerHTML = `
-      <div style="position:relative">
-        ${imgContent}
-        <div class="rank-badge">${p.vips} VIPs</div>
-        <div class="sold-badge">VENDIDO</div>
-      </div>
-      <div class="card-body">
-        <div class="card-rank">${p.name}</div>
-        <div class="card-details"><span class="dot"></span> ${p.vips} VIPs inclusos</div>
-        <div class="email-badge email-${p.email.toLowerCase()}">E-MAIL ${p.email}</div>
-        <div class="card-price">R$ ${p.price.toFixed(2).replace('.', ',')} <span>VIA PIX</span></div>
-        <div class="card-actions">
-          <button class="btn-whatsapp" onclick="sendWhatsApp(${i})" ${p.status === 'sold' ? 'disabled style="opacity:0.4;cursor:not-allowed"' : ''}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            TENHO INTERESSE
-          </button>
-          <a class="btn-profile" href="${p.link}" target="_blank">VER PERFIL</a>
+<script type="module">
+  import { initializeApp } from "firebase/app";
+  import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
+  
+  // Firebase configuration com o appId correto
+  const firebaseConfig = {
+    apiKey: "AIzaSyBuKdPxn_bK6PmJOU4kpITQ555ikJKsIK0",
+    authDomain: "fyzer-59f62.firebaseapp.com",
+    projectId: "fyzer-59f62",
+    storageBucket: "fyzer-59f62.firebasestorage.app",
+    messagingSenderId: "720914253285",
+    appId: "1:720914253285:web:842c12214e2a6bed67db0c"
+  };
+  
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const productsCol = collection(db, "products");
+  
+  let products = [];
+  let isAdm = false;
+  let newImgBase64 = '';
+  let editImgBase64 = '';
+  let currentEditId = null;
+  
+  const WHATSAPP = "5567998557762";
+  const ADM_USER = "admin";
+  const ADM_PASS = "fyzer2025";
+  
+  // TODOS OS 7 PRODUTOS ORIGINAIS
+  const initialProducts = [
+    { name: "CORONEL COM 4 VIPs", vips: 4, email: "OFF", price: 79.99, link: "https://br.crossfire.z8games.com/profile/6766468", img: "", status: "available" },
+    { name: "4 ESTRELAS COM 6 VIPs", vips: 6, email: "OFF", price: 149.99, link: "https://br.crossfire.z8games.com/profile/4228416", img: "", status: "available" },
+    { name: "MAJOR COM 12 VIPs", vips: 12, email: "ON", price: 199.99, link: "https://br.crossfire.z8games.com/profile/18452910", img: "", status: "available" },
+    { name: "MAJOR COM 20 VIPs", vips: 20, email: "ON", price: 299.99, link: "https://br.crossfire.z8games.com/profile/17713392", img: "", status: "available" },
+    { name: "MARECHAL COM 10 VIPs", vips: 10, email: "ON", price: 299.99, link: "https://br.crossfire.z8games.com/profile/1809510", img: "", status: "available" },
+    { name: "TENENTE CORONEL COM 20 VIPs", vips: 20, email: "ON", price: 349.99, link: "https://br.crossfire.z8games.com/profile/18258843", img: "", status: "available" },
+    { name: "3 ESTRELAS COM 28 VIPs", vips: 28, email: "ON", price: 379.99, link: "https://br.crossfire.z8games.com/profile/18056626", img: "", status: "available" }
+  ];
+  
+  const rankIcons = { "CORONEL": "🎖️", "ESTRELAS": "⭐", "MAJOR": "🏅", "MARECHAL": "🦅", "TENENTE": "🔱", "GENERAL": "🌟" };
+  
+  function getRankIcon(name) {
+    for (let key in rankIcons) {
+      if (name.toUpperCase().includes(key)) return rankIcons[key];
+    }
+    return "🎮";
+  }
+  
+  async function initializeAndLoad() {
+    try {
+      const snapshot = await getDocs(productsCol);
+      
+      if (snapshot.empty) {
+        // Adiciona todos os 7 produtos iniciais
+        for (const product of initialProducts) {
+          await addDoc(productsCol, product);
+        }
+        console.log("7 produtos adicionados ao Firebase!");
+        showToast("✅ 7 produtos carregados com sucesso!");
+      }
+      
+      // Carrega os produtos
+      await loadProducts();
+      
+    } catch (error) {
+      console.error("Erro na inicialização:", error);
+      const grid = document.getElementById('productsGrid');
+      if (grid) grid.innerHTML = '<div class="loading">❌ ERRO: Firebase não configurado corretamente.<br>Verifique as regras do Firestore</div>';
+      showToast("❌ Erro ao conectar com Firebase");
+    }
+  }
+  
+  async function loadProducts() {
+    try {
+      const snapshot = await getDocs(productsCol);
+      products = [];
+      snapshot.forEach(doc => {
+        products.push({ id: doc.id, ...doc.data() });
+      });
+      renderCatalog();
+      if (isAdm) renderAdmList();
+    } catch (error) {
+      console.error("Erro ao carregar:", error);
+      showToast("❌ Erro ao carregar produtos");
+      const grid = document.getElementById('productsGrid');
+      if (grid) grid.innerHTML = '<div class="loading">❌ ERRO AO CARREGAR PRODUTOS</div>';
+    }
+  }
+  
+  function renderCatalog() {
+    const grid = document.getElementById('productsGrid');
+    if (!grid) return;
+    
+    if (products.length === 0) {
+      grid.innerHTML = '<div class="loading">📭 NENHUM PRODUTO CADASTRADO</div>';
+      return;
+    }
+    
+    grid.innerHTML = '';
+    products.forEach((p) => {
+      const icon = getRankIcon(p.name);
+      const imgContent = p.img && p.img !== ''
+        ? `<img src="${p.img}" class="card-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="card-img-placeholder" style="display:none">${icon}</div>`
+        : `<div class="card-img-placeholder">${icon}</div>`;
+      
+      const card = document.createElement('div');
+      card.className = 'card' + (p.status === 'sold' ? ' sold' : '');
+      card.innerHTML = `
+        <div style="position:relative">
+          ${imgContent}
+          <div class="rank-badge">${p.vips} VIPs</div>
+          <div class="sold-badge">VENDIDO</div>
         </div>
-      </div>
-    `;
-    grid.appendChild(card);
-  });
-}
-
-function sendWhatsApp(i) {
-  const p = products[i];
-  const msg = encodeURIComponent(
-    `Olá! Tenho interesse na conta:\n\n🎮 *${p.name}*\n⭐ VIPs: ${p.vips}\n📧 E-mail: ${p.email}\n💰 Preço: R$ ${p.price.toFixed(2).replace('.', ',')}\n🔗 Perfil: ${p.link}\n\nGostaria de mais informações!`
-  );
-  window.open(`https://wa.me/${WHATSAPP}?text=${msg}`, '_blank');
-}
-
-function showSection(sec) {
-  if (sec === 'adm' && !isAdm) {
-    document.getElementById('loginModal').classList.add('show');
-    return;
+        <div class="card-body">
+          <div class="card-rank">${p.name}</div>
+          <div class="card-details"><span class="dot"></span> ${p.vips} VIPs inclusos</div>
+          <div class="email-badge email-${(p.email || 'OFF').toLowerCase()}">E-MAIL ${p.email || 'OFF'}</div>
+          <div class="card-price">R$ ${(p.price || 0).toFixed(2).replace('.', ',')} <span>VIA PIX</span></div>
+          <div class="card-actions">
+            <button class="btn-whatsapp" onclick="window.sendWhatsApp('${p.id}')" ${p.status === 'sold' ? 'disabled style="opacity:0.4;cursor:not-allowed"' : ''}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              TENHO INTERESSE
+            </button>
+            <a class="btn-profile" href="${p.link}" target="_blank">VER PERFIL</a>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
   }
-  document.getElementById('catalog-section').style.display = sec === 'catalog' ? 'block' : 'none';
-  document.getElementById('adm-section').style.display = sec === 'adm' ? 'block' : 'none';
-  document.querySelectorAll('nav button').forEach((b, i) => b.classList.toggle('active', i === (sec === 'catalog' ? 0 : 1)));
-  if (sec === 'adm') renderAdmList();
-}
-
-function doLogin() {
-  const u = document.getElementById('admUser').value;
-  const p = document.getElementById('admPass').value;
-  if (u === ADM_USER && p === ADM_PASS) {
-    isAdm = true;
-    document.getElementById('loginModal').classList.remove('show');
-    showSection('adm');
-    showToast('✅ ACESSO LIBERADO');
-  } else {
-    document.getElementById('loginError').style.display = 'block';
-    setTimeout(() => document.getElementById('loginError').style.display = 'none', 3000);
-  }
-}
-
-function closeLogin() { document.getElementById('loginModal').classList.remove('show'); }
-
-function logout() {
-  isAdm = false;
-  showSection('catalog');
-  showToast('🔒 SESSÃO ENCERRADA');
-}
-
-function renderAdmList() {
-  const list = document.getElementById('admList');
-  list.innerHTML = '';
-  products.forEach((p, i) => {
-    const item = document.createElement('div');
-    item.className = 'adm-product-item';
-    item.innerHTML = `
-      <span>${p.name}</span>
-      <span class="price-edit">R$ ${p.price.toFixed(2).replace('.', ',')}</span>
-      <span style="color:${p.status==='sold'?'#ff6666':'#00ff88'}">${p.status === 'sold' ? 'VENDIDO' : 'DISPONÍVEL'}</span>
-      <div class="adm-btns">
-        <button class="btn-sm btn-edit" onclick="openEdit(${i})">EDITAR</button>
-        <button class="btn-sm btn-del" onclick="deleteProduct(${i})">EXCLUIR</button>
-      </div>
-    `;
-    list.appendChild(item);
-  });
-}
-
-function handleNewImgUpload(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const label = document.getElementById('newUploadLabel');
-  label.textContent = '✅ ' + file.name;
-  label.classList.add('has-file');
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    newImgBase64 = e.target.result;
-    const prev = document.getElementById('imgPreview');
-    prev.src = newImgBase64;
-    prev.style.display = 'block';
+  
+  window.sendWhatsApp = function(id) {
+    const p = products.find(prod => prod.id === id);
+    if (!p) return;
+    const msg = encodeURIComponent(
+      `Olá! Tenho interesse na conta:\n\n🎮 *${p.name}*\n⭐ VIPs: ${p.vips}\n📧 E-mail: ${p.email}\n💰 Preço: R$ ${(p.price || 0).toFixed(2).replace('.', ',')}\n🔗 Perfil: ${p.link}\n\nGostaria de mais informações!`
+    );
+    window.open(`https://wa.me/${WHATSAPP}?text=${msg}`, '_blank');
   };
-  reader.readAsDataURL(file);
-}
-
-function handleEditImgUpload(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const label = document.getElementById('editUploadLabel');
-  label.textContent = '✅ ' + file.name;
-  label.classList.add('has-file');
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    editImgBase64 = e.target.result;
+  
+  function showSection(sec) {
+    if (sec === 'adm' && !isAdm) {
+      document.getElementById('loginModal').classList.add('show');
+      return;
+    }
+    document.getElementById('catalog-section').style.display = sec === 'catalog' ? 'block' : 'none';
+    document.getElementById('adm-section').style.display = sec === 'adm' ? 'block' : 'none';
+    document.querySelectorAll('nav button').forEach((b, i) => b.classList.toggle('active', i === (sec === 'catalog' ? 0 : 1)));
+    if (sec === 'adm') renderAdmList();
+  }
+  
+  function doLogin() {
+    const u = document.getElementById('admUser').value;
+    const p = document.getElementById('admPass').value;
+    if (u === ADM_USER && p === ADM_PASS) {
+      isAdm = true;
+      document.getElementById('loginModal').classList.remove('show');
+      showSection('adm');
+      showToast('✅ ACESSO LIBERADO');
+      renderAdmList();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+      setTimeout(() => document.getElementById('loginError').style.display = 'none', 3000);
+    }
+  }
+  
+  function closeLogin() { document.getElementById('loginModal').classList.remove('show'); }
+  
+  function logout() {
+    isAdm = false;
+    showSection('catalog');
+    showToast('🔒 SESSÃO ENCERRADA');
+  }
+  
+  function renderAdmList() {
+    const list = document.getElementById('admList');
+    if (!list) return;
+    list.innerHTML = '';
+    products.forEach((p) => {
+      const item = document.createElement('div');
+      item.className = 'adm-product-item';
+      item.innerHTML = `
+        <span>${p.name}</span>
+        <span class="price-edit">R$ ${(p.price || 0).toFixed(2).replace('.', ',')}</span>
+        <span style="color:${p.status==='sold'?'#ff6666':'#00ff88'}">${p.status === 'sold' ? 'VENDIDO' : 'DISPONÍVEL'}</span>
+        <div class="adm-btns">
+          <button class="btn-sm btn-edit" onclick="window.openEdit('${p.id}')">EDITAR</button>
+          <button class="btn-sm btn-del" onclick="window.deleteProduct('${p.id}')">EXCLUIR</button>
+        </div>
+      `;
+      list.appendChild(item);
+    });
+  }
+  
+  function handleNewImgUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const label = document.getElementById('newUploadLabel');
+    label.textContent = '✅ ' + file.name;
+    label.classList.add('has-file');
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      newImgBase64 = e.target.result;
+      const prev = document.getElementById('imgPreview');
+      prev.src = newImgBase64;
+      prev.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+  
+  function handleEditImgUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const label = document.getElementById('editUploadLabel');
+    label.textContent = '✅ ' + file.name;
+    label.classList.add('has-file');
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      editImgBase64 = e.target.result;
+      const prev = document.getElementById('editImgPreview');
+      prev.src = editImgBase64;
+      prev.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+  
+  async function addProduct() {
+    const name = document.getElementById('newName').value.trim();
+    const vips = parseInt(document.getElementById('newVips').value);
+    const price = parseFloat(document.getElementById('newPrice').value);
+    const email = document.getElementById('newEmail').value;
+    const link = document.getElementById('newLink').value.trim();
+    const status = document.getElementById('newStatus').value;
+    
+    if (!name || isNaN(vips) || isNaN(price)) { 
+      showToast('⚠️ PREENCHA OS CAMPOS OBRIGATÓRIOS'); 
+      return; 
+    }
+    
+    try {
+      const newProduct = { name, vips, email, price, link, img: newImgBase64 || '', status };
+      const docRef = await addDoc(productsCol, newProduct);
+      newProduct.id = docRef.id;
+      products.push(newProduct);
+      renderCatalog();
+      renderAdmList();
+      showToast('✅ PRODUTO ADICIONADO!');
+      
+      document.getElementById('newName').value = '';
+      document.getElementById('newVips').value = '';
+      document.getElementById('newPrice').value = '';
+      document.getElementById('newLink').value = '';
+      document.getElementById('newImgFile').value = '';
+      document.getElementById('imgPreview').style.display = 'none';
+      const label = document.getElementById('newUploadLabel');
+      label.textContent = '📷 ESCOLHER FOTO DO CELULAR / PC';
+      label.classList.remove('has-file');
+      newImgBase64 = '';
+    } catch (error) {
+      console.error("Erro ao adicionar:", error);
+      showToast("❌ Erro ao adicionar produto");
+    }
+  }
+  
+  window.openEdit = function(id) {
+    const p = products.find(prod => prod.id === id);
+    if (!p) return;
+    currentEditId = id;
+    document.getElementById('editName').value = p.name;
+    document.getElementById('editVips').value = p.vips;
+    document.getElementById('editPrice').value = p.price;
+    document.getElementById('editEmail').value = p.email || 'OFF';
+    document.getElementById('editLink').value = p.link || '';
+    document.getElementById('editStatus').value = p.status || 'available';
+    editImgBase64 = p.img || '';
     const prev = document.getElementById('editImgPreview');
-    prev.src = editImgBase64;
-    prev.style.display = 'block';
+    const editLabel = document.getElementById('editUploadLabel');
+    if (p.img && p.img !== '') {
+      prev.src = p.img;
+      prev.style.display = 'block';
+      editLabel.textContent = '✅ Imagem carregada';
+      editLabel.classList.add('has-file');
+    } else {
+      prev.style.display = 'none';
+      editLabel.textContent = '📷 ESCOLHER FOTO DO CELULAR / PC';
+      editLabel.classList.remove('has-file');
+    }
+    document.getElementById('editImgFile').value = '';
+    document.getElementById('editModal').classList.add('show');
   };
-  reader.readAsDataURL(file);
-}
-
-function addProduct() {
-  const name = document.getElementById('newName').value.trim();
-  const vips = parseInt(document.getElementById('newVips').value);
-  const price = parseFloat(document.getElementById('newPrice').value);
-  const email = document.getElementById('newEmail').value;
-  const link = document.getElementById('newLink').value.trim();
-  const status = document.getElementById('newStatus').value;
-  if (!name || isNaN(vips) || isNaN(price)) { showToast('⚠️ PREENCHA OS CAMPOS OBRIGATÓRIOS'); return; }
-  products.push({ name, vips, email, price, link, img: newImgBase64, status });
-  renderCatalog();
-  renderAdmList();
-  showToast('✅ PRODUTO ADICIONADO!');
-  ['newName','newVips','newPrice','newLink'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('newImgFile').value = '';
-  document.getElementById('imgPreview').style.display = 'none';
-  const label = document.getElementById('newUploadLabel');
-  label.textContent = '📷 ESCOLHER FOTO DO CELULAR / PC';
-  label.classList.remove('has-file');
-  newImgBase64 = '';
-}
-
-function openEdit(i) {
-  const p = products[i];
-  document.getElementById('editIndex').value = i;
-  document.getElementById('editName').value = p.name;
-  document.getElementById('editVips').value = p.vips;
-  document.getElementById('editPrice').value = p.price;
-  document.getElementById('editEmail').value = p.email;
-  document.getElementById('editLink').value = p.link;
-  document.getElementById('editStatus').value = p.status;
-  editImgBase64 = p.img || '';
-  const prev = document.getElementById('editImgPreview');
-  const editLabel = document.getElementById('editUploadLabel');
-  if (p.img) {
-    prev.src = p.img;
-    prev.style.display = 'block';
-    editLabel.textContent = '✅ Imagem carregada';
-    editLabel.classList.add('has-file');
-  } else {
-    prev.style.display = 'none';
-    editLabel.textContent = '📷 ESCOLHER FOTO DO CELULAR / PC';
-    editLabel.classList.remove('has-file');
+  
+  async function saveEdit() {
+    if (!currentEditId) return;
+    const updatedProduct = {
+      name: document.getElementById('editName').value,
+      vips: parseInt(document.getElementById('editVips').value),
+      price: parseFloat(document.getElementById('editPrice').value),
+      email: document.getElementById('editEmail').value,
+      link: document.getElementById('editLink').value,
+      img: editImgBase64 || '',
+      status: document.getElementById('editStatus').value
+    };
+    try {
+      const productRef = doc(db, "products", currentEditId);
+      await updateDoc(productRef, updatedProduct);
+      const index = products.findIndex(p => p.id === currentEditId);
+      if (index !== -1) {
+        products[index] = { ...updatedProduct, id: currentEditId };
+      }
+      renderCatalog();
+      renderAdmList();
+      closeEdit();
+      showToast('✅ PRODUTO ATUALIZADO!');
+    } catch (error) {
+      console.error("Erro ao atualizar:", error);
+      showToast("❌ Erro ao atualizar produto");
+    }
   }
-  document.getElementById('editImgFile').value = '';
-  document.getElementById('editModal').classList.add('show');
-}
-
-function saveEdit() {
-  const i = parseInt(document.getElementById('editIndex').value);
-  products[i] = {
-    name: document.getElementById('editName').value,
-    vips: parseInt(document.getElementById('editVips').value),
-    price: parseFloat(document.getElementById('editPrice').value),
-    email: document.getElementById('editEmail').value,
-    link: document.getElementById('editLink').value,
-    img: editImgBase64,
-    status: document.getElementById('editStatus').value
+  
+  function closeEdit() { 
+    document.getElementById('editModal').classList.remove('show');
+    currentEditId = null;
+  }
+  
+  window.deleteProduct = async function(id) {
+    if (confirm('Excluir este produto?')) {
+      try {
+        await deleteDoc(doc(db, "products", id));
+        products = products.filter(p => p.id !== id);
+        renderCatalog();
+        renderAdmList();
+        showToast('🗑️ PRODUTO REMOVIDO');
+      } catch (error) {
+        console.error("Erro ao excluir:", error);
+        showToast("❌ Erro ao excluir produto");
+      }
+    }
   };
-  renderCatalog();
-  renderAdmList();
-  closeEdit();
-  showToast('✅ PRODUTO ATUALIZADO!');
-}
-
-function closeEdit() { document.getElementById('editModal').classList.remove('show'); }
-
-function deleteProduct(i) {
-  if (confirm('Excluir este produto?')) {
-    products.splice(i, 1);
-    renderCatalog();
-    renderAdmList();
-    showToast('🗑️ PRODUTO REMOVIDO');
+  
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
   }
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-// Lightning
-const canvas = document.getElementById('lightning-canvas');
-const ctx = canvas.getContext('2d');
-function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
-
-function drawLightning(x1, y1, x2, y2, branches, depth) {
-  if (depth <= 0) return;
-  const dx = x2 - x1, dy = y2 - y1;
-  const len = Math.sqrt(dx*dx + dy*dy);
-  const segments = Math.max(4, Math.floor(len / 40));
-  let pts = [{x: x1, y: y1}];
-  for (let i = 1; i < segments; i++) {
-    const t = i / segments;
-    pts.push({ x: x1 + dx * t + (Math.random() - 0.5) * 60, y: y1 + dy * t + (Math.random() - 0.5) * 60 });
+  
+  // Lightning Effect
+  const canvas = document.getElementById('lightning-canvas');
+  const ctx = canvas.getContext('2d');
+  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+  
+  function drawLightning(x1, y1, x2, y2, branches, depth) {
+    if (depth <= 0) return;
+    const dx = x2 - x1, dy = y2 - y1;
+    const len = Math.sqrt(dx*dx + dy*dy);
+    const segments = Math.max(4, Math.floor(len / 40));
+    let pts = [{x: x1, y: y1}];
+    for (let i = 1; i < segments; i++) {
+      const t = i / segments;
+      pts.push({ x: x1 + dx * t + (Math.random() - 0.5) * 60, y: y1 + dy * t + (Math.random() - 0.5) * 60 });
+    }
+    pts.push({x: x2, y: y2});
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+    ctx.strokeStyle = `rgba(0, 180, 255, ${0.3 + depth * 0.15})`;
+    ctx.lineWidth = depth * 0.8;
+    ctx.shadowColor = '#00cfff';
+    ctx.shadowBlur = 8;
+    ctx.stroke();
+    if (branches > 0) {
+      const branchPt = pts[Math.floor(pts.length * 0.4 + Math.random() * pts.length * 0.3)];
+      const angle = Math.atan2(dy, dx) + (Math.random() - 0.5) * 1.2;
+      const bLen = len * 0.4;
+      drawLightning(branchPt.x, branchPt.y, branchPt.x + Math.cos(angle) * bLen, branchPt.y + Math.sin(angle) * bLen, 0, depth - 1);
+    }
   }
-  pts.push({x: x2, y: y2});
-  ctx.beginPath();
-  ctx.moveTo(pts[0].x, pts[0].y);
-  for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
-  ctx.strokeStyle = `rgba(0, 180, 255, ${0.3 + depth * 0.15})`;
-  ctx.lineWidth = depth * 0.8;
-  ctx.shadowColor = '#00cfff';
-  ctx.shadowBlur = 8;
-  ctx.stroke();
-  if (branches > 0) {
-    const branchPt = pts[Math.floor(pts.length * 0.4 + Math.random() * pts.length * 0.3)];
-    const angle = Math.atan2(dy, dx) + (Math.random() - 0.5) * 1.2;
-    const bLen = len * 0.4;
-    drawLightning(branchPt.x, branchPt.y, branchPt.x + Math.cos(angle) * bLen, branchPt.y + Math.sin(angle) * bLen, 0, depth - 1);
+  
+  let lightningTimer = 0;
+  function animateLightning(ts) {
+    requestAnimationFrame(animateLightning);
+    if (ts - lightningTimer < 1800 + Math.random() * 2000) return;
+    lightningTimer = ts;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const x = Math.random() * canvas.width;
+    drawLightning(x, 0, x + (Math.random()-0.5)*200, canvas.height * 0.6, 2, 3);
+    setTimeout(() => ctx.clearRect(0, 0, canvas.width, canvas.height), 200);
   }
-}
-
-let lightningTimer = 0;
-function animateLightning(ts) {
   requestAnimationFrame(animateLightning);
-  if (ts - lightningTimer < 1800 + Math.random() * 2000) return;
-  lightningTimer = ts;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  const x = Math.random() * canvas.width;
-  drawLightning(x, 0, x + (Math.random()-0.5)*200, canvas.height * 0.6, 2, 3);
-  setTimeout(() => ctx.clearRect(0, 0, canvas.width, canvas.height), 200);
-}
-requestAnimationFrame(animateLightning);
-
-renderCatalog();
+  
+  // Expor funções globais
+  window.showSection = showSection;
+  window.doLogin = doLogin;
+  window.closeLogin = closeLogin;
+  window.logout = logout;
+  window.addProduct = addProduct;
+  window.saveEdit = saveEdit;
+  window.closeEdit = closeEdit;
+  window.handleNewImgUpload = handleNewImgUpload;
+  window.handleEditImgUpload = handleEditImgUpload;
+  
+  // Iniciar tudo
+  initializeAndLoad();
 </script>
 </body>
 </html>
